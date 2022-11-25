@@ -1,0 +1,4 @@
+On files that support seeking,
+the read operation commences at
+the file offset,
+and the file offset
