@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/01 14:58:54 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/01 17:43:38 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static	int	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup_before_nl(const char *s)
+//delete later
+char	*ft_strdup(const char *s)
 {
 	char	*dup;
 	int		len;
@@ -36,14 +37,34 @@ char	*ft_strdup_before_nl(const char *s)
 	dup = malloc(sizeof(char) * (len + 1));
 	if (dup == NULL)
 		return (NULL);
-		
-	while (s[i] && s[i] != '\n')
+	while (s && s[i])
 	{
 		dup[i] = s[i];
 		i++;
 	}
+	dup[i] = '\0';
+	return (dup);
+}
+
+char	*ft_strdup_before_nl(const char *reserve)
+{
+	char	*dup;
+	int		len;
+	int		i;
+
+	i = 0;
+	len = ft_strlen(reserve);
+	dup = malloc(sizeof(char) * (len + 1));
+	if (dup == NULL)
+		return (NULL);
+		
+	while (reserve[i] && reserve[i] != '\n')
+	{
+		dup[i] = reserve[i];
+		i++;
+	}
 	dup[i] = '\n';
-	//dup[i] = '\0';
+	// dup[i] = '\0';
 	return (dup);
 }
 
@@ -58,6 +79,18 @@ char	*ft_strchr(const char *str, int c)
 	if ((char)c == '\0')
 		return ((char *)str);
 	return (0);
+}
+
+size_t	nl_index(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str && str[i] && str[i] != '\n')
+		i++;
+	if (str[i] == '\n')
+		i++;
+	return (i);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -115,20 +148,20 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 static void	nl_found_in_reserve(char **reserve, char **line)
 {
-	size_t	i;
-	size_t	j;
 	size_t len_reserve;
+	size_t len_line;
+	char 	*reserve_temp;
 	
-	i = 0;
-	j = 0;
 	*line = ft_strdup_before_nl(*reserve);
+	len_line = ft_strlen(*line);
 	len_reserve = ft_strlen(*reserve);
-	while (*reserve && *reserve[i] != '\n')
-		i++;
-	while (i < len_reserve)
-		j++;
-	*reserve = ft_substr(*reserve, *reserve[i + 1], j);
+	reserve_temp = ft_substr(*reserve, nl_index(*reserve), len_reserve - len_line);
+	//reserve_temp = ft_strdup(ft_strchr(*reserve, '\n'));
+	free(*reserve);
+	*reserve = reserve_temp;
 }
+
+
 
 char *get_next_line(int fd)
 {
@@ -143,20 +176,18 @@ char *get_next_line(int fd)
 	while (bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
+		if (bytes_read < 0) // error
 			return (NULL);
 		buffer[bytes_read] = '\0';
 		reserve = ft_strjoin(reserve, buffer);
+		printf("reserve: %s\n", reserve);
 		if (ft_strchr(reserve, '\n') != 0)
-		{
-			//copy into line everything before the '\n' and overwrite reserve with characters after '\n' 
-			nl_found_in_reserve(&reserve, &line);
 			break;
-		}
 	}
+	nl_found_in_reserve(&reserve, &line);
 	// if (!line)
-	// 	free (everything)
-	printf("%s\n", line);
+	// 	free (line);
+	//printf("%s\n", line);
 	return (line);
 }
 
@@ -166,12 +197,19 @@ int	main(void)
 	
 	fd = open("text.txt", O_RDONLY);
 	get_next_line(fd);
-	// system("leaks a.out");
-	// while(1)
-	// return (1);
+	//printf("line 1: %s")
+	//get_next_line(fd);
+	//system("leaks a.out");
 }
 
 
+// if (reserve == NULL)
+// 	{
+// 		reserve = malloc(1);
+// 		if (reserve == NULL)
+// 			return (NULL);
+// 		reserve[0] = '\0';
+// 	}
 
 //printf("%s\n", str);
 	// while (str)
