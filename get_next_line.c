@@ -6,16 +6,24 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/11/30 18:01:06 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/01 14:58:54 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 #include <fcntl.h>
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 5
+#include <stdlib.h>
 
-#endif
+
+static	int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s && s[i])
+		i++;
+	return (i);
+}
 
 char	*ft_strdup_before_nl(const char *s)
 {
@@ -24,7 +32,7 @@ char	*ft_strdup_before_nl(const char *s)
 	int		i;
 
 	i = 0;
-	len = strlen(s);
+	len = ft_strlen(s);
 	dup = malloc(sizeof(char) * (len + 1));
 	if (dup == NULL)
 		return (NULL);
@@ -39,19 +47,9 @@ char	*ft_strdup_before_nl(const char *s)
 	return (dup);
 }
 
-int	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
 char	*ft_strchr(const char *str, int c)
 {	
-	while (*str)
+	while (str && *str)
 	{
 		if (*str == (char)c)
 			return ((char *)str);
@@ -75,12 +73,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3 = malloc((len_s3 + 1) * sizeof(char));
 	if (s3 == NULL)
 		return (NULL);
-	while (s1[i])
+	while (s1 && s1[i])
 	{
 		s3[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		s3[i] = s2[j];
 		j++;
@@ -118,32 +116,36 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 static void	nl_found_in_reserve(char **reserve, char **line)
 {
 	size_t	i;
+	size_t	j;
 	size_t len_reserve;
 	
 	i = 0;
+	j = 0;
 	*line = ft_strdup_before_nl(*reserve);
-	len_reserve = ft_strlen(reserve);
-	while (*reserve && *reserve[i] && *reserve[i] == '\n')
+	len_reserve = ft_strlen(*reserve);
+	while (*reserve && *reserve[i] != '\n')
 		i++;
-	*reserve = ft_substr(*reserve, *reserve[i + 1], );
+	while (i < len_reserve)
+		j++;
+	*reserve = ft_substr(*reserve, *reserve[i + 1], j);
 }
-
 
 char *get_next_line(int fd)
 {
-	int			bytes_read;
-	// when reaching a '\n', save here what is after the '\n' an join it with the next buffer
-	static char	*reserve;
-	// when reaching a '\n' in the *reserve, we store everything before the '\n' and return this line
-	char *line;
-	// read() will store bytes read here, it resets after each call, join it with *reserve
-	char 		buffer[BUFFER_SIZE + 1];
-	buffer[BUFFER_SIZE] = '\0';
-	fd = open("text.txt", O_RDONLY);
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	line = 0;
+	int				bytes_read;
+	static char		*reserve;
+	char			*line;
+	char			buffer[BUFFER_SIZE + 1];
+	
+	line = NULL;
+	fd = open("./text.txt", O_RDONLY);
+	bytes_read = 1;
 	while (bytes_read > 0)
 	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (NULL);
+		buffer[bytes_read] = '\0';
 		reserve = ft_strjoin(reserve, buffer);
 		if (ft_strchr(reserve, '\n') != 0)
 		{
@@ -151,19 +153,22 @@ char *get_next_line(int fd)
 			nl_found_in_reserve(&reserve, &line);
 			break;
 		}
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
-	//printf("%s\n", reserve);
+	// if (!line)
+	// 	free (everything)
+	printf("%s\n", line);
 	return (line);
 }
 
 int	main(void)
 {
 	int	fd;
-
+	
 	fd = open("text.txt", O_RDONLY);
 	get_next_line(fd);
-	get_next_line(fd);
+	// system("leaks a.out");
+	// while(1)
+	// return (1);
 }
 
 
