@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/01 17:43:38 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/01 18:35:32 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static	int	ft_strlen(const char *s)
 }
 
 //delete later
-char	*ft_strdup(const char *s)
+char	*ft_strdup_after_nl(const char *s)
 {
 	char	*dup;
 	int		len;
@@ -57,14 +57,13 @@ char	*ft_strdup_before_nl(const char *reserve)
 	dup = malloc(sizeof(char) * (len + 1));
 	if (dup == NULL)
 		return (NULL);
-		
 	while (reserve[i] && reserve[i] != '\n')
 	{
 		dup[i] = reserve[i];
 		i++;
 	}
 	dup[i] = '\n';
-	// dup[i] = '\0';
+	//dup[i] = '\0';
 	return (dup);
 }
 
@@ -81,17 +80,6 @@ char	*ft_strchr(const char *str, int c)
 	return (0);
 }
 
-size_t	nl_index(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str && str[i] && str[i] != '\n')
-		i++;
-	if (str[i] == '\n')
-		i++;
-	return (i);
-}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -120,48 +108,16 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3[i] = '\0';
 	return (s3);
 }
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char			*sub_str;
-	int				i;
-	unsigned int	len_s;
-
-	i = 0;
-	len_s = ft_strlen(s);
-	if (len_s <= start)
-		len = 0;
-	else if (len_s - start < len)
-		len = len_s - start;
-	sub_str = (char *) malloc ((len + 1) * sizeof(char));
-	if (sub_str == NULL)
-		return (NULL);
-	while (len > 0 && start < len_s)
-	{
-		sub_str[i] = s[start];
-		i++;
-		start++;
-		len--;
-	}
-	sub_str[i] = '\0';
-	return (sub_str);
-}
 
 static void	nl_found_in_reserve(char **reserve, char **line)
 {
-	size_t len_reserve;
-	size_t len_line;
 	char 	*reserve_temp;
 	
 	*line = ft_strdup_before_nl(*reserve);
-	len_line = ft_strlen(*line);
-	len_reserve = ft_strlen(*reserve);
-	reserve_temp = ft_substr(*reserve, nl_index(*reserve), len_reserve - len_line);
-	//reserve_temp = ft_strdup(ft_strchr(*reserve, '\n'));
+	reserve_temp = ft_strdup_after_nl(ft_strchr(*reserve, '\n'));
 	free(*reserve);
 	*reserve = reserve_temp;
 }
-
-
 
 char *get_next_line(int fd)
 {
@@ -171,23 +127,27 @@ char *get_next_line(int fd)
 	char			buffer[BUFFER_SIZE + 1];
 	
 	line = NULL;
-	fd = open("./text.txt", O_RDONLY);
+	//fd = open("./text.txt", O_RDONLY);
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0) // error
 			return (NULL);
+		printf("read_ret: %d\n", bytes_read);
+		
 		buffer[bytes_read] = '\0';
 		reserve = ft_strjoin(reserve, buffer);
-		printf("reserve: %s\n", reserve);
 		if (ft_strchr(reserve, '\n') != 0)
 			break;
+		printf("read_ret: %d\n", bytes_read);
 	}
+	printf("reserve before: %s\n", reserve);
 	nl_found_in_reserve(&reserve, &line);
+	printf("reserve after: %s\n", reserve);
 	// if (!line)
 	// 	free (line);
-	//printf("%s\n", line);
+	printf("%s", line);
 	return (line);
 }
 
@@ -196,7 +156,12 @@ int	main(void)
 	int	fd;
 	
 	fd = open("text.txt", O_RDONLY);
+	
 	get_next_line(fd);
+	get_next_line(fd);
+	get_next_line(fd);
+	
+	//get_next_line(fd);
 	//printf("line 1: %s")
 	//get_next_line(fd);
 	//system("leaks a.out");
