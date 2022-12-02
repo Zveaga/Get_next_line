@@ -1,2 +1,5 @@
-*.dSYM
+*.
 *./
+*.txt
+a.out
+get_next_line
