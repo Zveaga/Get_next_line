@@ -6,14 +6,13 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/01 18:35:32 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/02 14:48:46 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 #include <fcntl.h>
 #include <stdlib.h>
-
 
 static	int	ft_strlen(const char *s)
 {
@@ -25,21 +24,20 @@ static	int	ft_strlen(const char *s)
 	return (i);
 }
 
-//delete later
-char	*ft_strdup_after_nl(const char *s)
+char	*ft_strdup_after_nl(const char *reserve)
 {
 	char	*dup;
 	int		len;
 	int		i;
 
 	i = 0;
-	len = ft_strlen(s);
+	len = ft_strlen(reserve);
 	dup = malloc(sizeof(char) * (len + 1));
 	if (dup == NULL)
 		return (NULL);
-	while (s && s[i])
+	while (reserve && reserve[i])
 	{
-		dup[i] = s[i];
+		dup[i] = reserve[i];
 		i++;
 	}
 	dup[i] = '\0';
@@ -51,19 +49,22 @@ char	*ft_strdup_before_nl(const char *reserve)
 	char	*dup;
 	int		len;
 	int		i;
+	int		flag;
 
 	i = 0;
 	len = ft_strlen(reserve);
 	dup = malloc(sizeof(char) * (len + 1));
+	flag = 0;
 	if (dup == NULL)
 		return (NULL);
-	while (reserve[i] && reserve[i] != '\n')
+	while (reserve[i] && (flag == 0))
 	{
 		dup[i] = reserve[i];
+		if (reserve[i] == '\n')
+			flag = 1;
 		i++;
 	}
-	dup[i] = '\n';
-	//dup[i] = '\0';
+	dup[i] = '\0';
 	return (dup);
 }
 
@@ -79,7 +80,6 @@ char	*ft_strchr(const char *str, int c)
 		return ((char *)str);
 	return (0);
 }
-
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -111,10 +111,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 static void	nl_found_in_reserve(char **reserve, char **line)
 {
-	char 	*reserve_temp;
-	
+	char	*reserve_temp;
+
 	*line = ft_strdup_before_nl(*reserve);
 	reserve_temp = ft_strdup_after_nl(ft_strchr(*reserve, '\n'));
+		if (*reserve_temp == '\n')
+			reserve_temp++;
 	free(*reserve);
 	*reserve = reserve_temp;
 }
@@ -127,45 +129,43 @@ char *get_next_line(int fd)
 	char			buffer[BUFFER_SIZE + 1];
 	
 	line = NULL;
-	//fd = open("./text.txt", O_RDONLY);
-	bytes_read = 1;
-	while (bytes_read > 0)
+	while (1)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0) // error
-			return (NULL);
-		printf("read_ret: %d\n", bytes_read);
-		
+		if (bytes_read < 0)
+			return (NULL);	// free memory
+		else if (bytes_read == 0)
+			break;
 		buffer[bytes_read] = '\0';
 		reserve = ft_strjoin(reserve, buffer);
 		if (ft_strchr(reserve, '\n') != 0)
 			break;
-		printf("read_ret: %d\n", bytes_read);
 	}
-	printf("reserve before: %s\n", reserve);
 	nl_found_in_reserve(&reserve, &line);
-	printf("reserve after: %s\n", reserve);
+	if (ft_strlen(line) == 0)
+		line = NULL;
 	// if (!line)
 	// 	free (line);
-	printf("%s", line);
+	//printf("%s", line);
 	return (line);
 }
 
 int	main(void)
 {
 	int	fd;
-	
+	char* line;
 	fd = open("text.txt", O_RDONLY);
-	
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	
-	//get_next_line(fd);
-	//printf("line 1: %s")
-	//get_next_line(fd);
-	//system("leaks a.out");
+	line = get_next_line(fd);
+	while (line)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
 }
+
+
+
 
 
 // if (reserve == NULL)
@@ -176,64 +176,51 @@ int	main(void)
 // 		reserve[0] = '\0';
 // 	}
 
-//printf("%s\n", str);
-	// while (str)
-	// {
-	// 	printf("%s\n", str);
-	// 	//free(str);
-	// 	//get_next_line(fd);
-	// }
 
-// 	int	main(void)
+// char *get_next_line(int fd)
 // {
-// 	int		fd;
-// 	char	array[BUFFER_SIZE + 1];
-// 	//char	*str;
-// 	array[BUFFER_SIZE] = '\0';
-// 	fd = open("./text.txt", O_RDONLY);
-// 	//str = get_next_line(fd);
+// 	int				bytes_read;
+// 	static char		*reserve;
+// 	char			*line;
+// 	char			buffer[BUFFER_SIZE + 1];
 	
-// 	int i = 1;
-// 	ssize_t br;
-// 	while ((br = read(fd, array, BUFFER_SIZE)) > 0)
+// 	line = NULL;
+// 	bytes_read = 1;
+// 	while (bytes_read > 0)
 // 	{
-// 		for (int i = 0; i < br; i++)
-// 			if (array[i] == '\n')
-// 				array[i] = '$';
-// 		array[br] = '\0';
-// 		printf("call %d|%s|\n", i, array);
-// 		i++;
+// 		bytes_read = read(fd, buffer, BUFFER_SIZE);
+// 		if (bytes_read < 0)
+// 			return (NULL);
+// 		buffer[bytes_read] = '\0';
+// 		reserve = ft_strjoin(reserve, buffer);
+// 		printf("%s\n", reserve);
+// 		if (ft_strchr(reserve, '\n') != 0 || bytes_read < BUFFER_SIZE)
+// 			break;
 // 	}
+// 	nl_found_in_reserve(&reserve, &line);
+// 	// if (!line)
+// 	// 	free (line);
+// 	// printf("%s", line);
+// 	return (line);
 // }
 
-
-// int	main(void)
+// char	*ft_strdup_before_nl_orig(const char *reserve)
 // {
-// 	int		fd;
-// 	char	array[BUFFER_SIZE + 1];
-// 	array[BUFFER_SIZE] = '\0';
-// 	int call;
-// 	int line;
-	
-// 	fd = open("./text.txt", O_RDONLY);
-// 	line = read(fd, array, BUFFER_SIZE);
-// 	call = 1;
-// 	while (line > 0)
+// 	char	*dup;
+// 	int		len;
+// 	int		i;
+
+// 	i = 0;
+// 	len = ft_strlen(reserve);
+// 	dup = malloc(sizeof(char) * (len + 1));
+// 	if (dup == NULL)
+// 		return (NULL);
+// 	while (reserve[i] && reserve[i] != '\n')
 // 	{
-// 		int	i = 0;
-// 		while (i < line)
-// 		{
-// 			if (array[i] == '\n')
-// 				array[i] = '$';
-// 			i++;
-// 		}
-// 		array[line] = '\0';
-// 		printf("Call: %d |%s|\n", call, array);
-// 		call++;
-// 		line = read(fd, array, BUFFER_SIZE);
+// 		dup[i] = reserve[i];
+// 		i++;
 // 	}
-	
-// 	//printf("Bytes read: %d\n", line);
-// 	//printf("Stuff read: %s\n", array);
-	
+// 	dup[i] = '\n';
+// 	//dup[i] = '\0';
+// 	return (dup);
 // }
