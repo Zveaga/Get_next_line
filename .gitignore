@@ -1,5 +1,4 @@
-*.
-*./
+*.DS_Store
+*.dSYM
 *.txt
-a.out
-get_next_line
+*.out
