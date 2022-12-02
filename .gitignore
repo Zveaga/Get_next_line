@@ -1,4 +1,4 @@
 *.DS_Store
 *.dSYM
-*.txt
 *.out
+get_next_line
