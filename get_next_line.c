@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/05 18:34:03 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/05 18:55:47 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_strdup_after_nl(const char *reserve)
 
 	i = 0;
 	len = ft_strlen(reserve);
-	dup = malloc(sizeof(char) * (len));
+	dup = malloc(sizeof(char) * (len + 1));
 	if (dup == NULL)
 		return (NULL);
 	while (reserve && reserve[i])
@@ -57,6 +57,7 @@ char	*ft_strdup_before_nl(const char *reserve)
 		len++;
 	if (reserve && reserve[len] == '\n')
 		len++;
+	//len = ft_strlen(reserve);
 	dup = malloc(sizeof(char) * (len + 1));
 	flag = 0;
 	if (dup == NULL)
@@ -68,7 +69,6 @@ char	*ft_strdup_before_nl(const char *reserve)
 			flag = 1;
 		i++;
 	}
-	
 	dup[i] = '\0';
 	return (dup);
 }
@@ -150,7 +150,11 @@ char *get_next_line(int fd)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
+		{
+			// free(reserve);
+			// free(line);
 			return (NULL);
+		}
 		else if (bytes_read == 0)
 			break;
 		buffer[bytes_read] = '\0';
@@ -164,20 +168,20 @@ char *get_next_line(int fd)
 	return (line);
 }
 
-int	main(void)
-{
-	int		fd;
-	char	*line;
+// int	main(void)
+// {
+// 	int		fd;
+// 	char	*line;
 	
-	fd = open("text.txt", O_RDONLY);
-	line = get_next_line(fd);
-	while (line)
-	{
-		printf("%s", line);
-		free(line);
-		line = get_next_line(fd);
-	}
-}
+// 	fd = open("text.txt", O_RDONLY);
+// 	line = get_next_line(fd);
+// 	while (line)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// }
 
 // if (reserve == NULL)
 // 	{
