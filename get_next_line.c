@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/05 18:55:47 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/07 11:02:07 by rares         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,50 +138,62 @@ static void	nl_found_in_reserve(char **reserve, char **line)
 	*reserve = reserve_temp;
 }
 
-char *get_next_line(int fd)
+char *read_line(int bytes_read, char **reserve, char **buffer, int fd)
 {
-	int				bytes_read;
-	static char		*reserve;
-	char			*line;
-	char			buffer[BUFFER_SIZE + 1];
+	int	bytes_read;
 	
-	line = NULL;
 	while (1)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		bytes_read = read(fd, *buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-		{
-			// free(reserve);
-			// free(line);
+		{	
+			free(*buffer);
 			return (NULL);
 		}
 		else if (bytes_read == 0)
 			break;
-		buffer[bytes_read] = '\0';
-		reserve = ft_strjoin(reserve, buffer);
-		if (ft_strchr(reserve, '\n') != 0)
+		*buffer[bytes_read] = '\0';
+		*reserve = ft_strjoin(*reserve, *buffer);
+		if (ft_strchr(*reserve, '\n') != 0)
 			break;
 	}
+	return (*reserve);
+}
+
+char *get_next_line(int fd)
+
+{
+	int				bytes_read;
+	static char		*reserve;
+	char			*line;
+	char			*buffer;
+	
+	line = NULL;
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (buffer == NULL)
+		return (NULL);
+	read_line(bytes_read)
 	nl_found_in_reserve(&reserve, &line);
 	if (ft_strlen(line) == 0)
 		line = NULL;
+	free(buffer);
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	int		fd;
-// 	char	*line;
+int	main(void)
+{
+	int		fd;
+	char	*line;
 	
-// 	fd = open("text.txt", O_RDONLY);
-// 	line = get_next_line(fd);
-// 	while (line)
-// 	{
-// 		printf("%s", line);
-// 		free(line);
-// 		line = get_next_line(fd);
-// 	}
-// }
+	fd = open("text.txt", O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
+}
 
 // if (reserve == NULL)
 // 	{
