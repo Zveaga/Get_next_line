@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/07 11:02:07 by rares         ########   odam.nl         */
+/*   Updated: 2022/12/07 16:51:52 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char	*ft_strdup_before_nl(const char *reserve)
 		len++;
 	if (reserve && reserve[len] == '\n')
 		len++;
-	//len = ft_strlen(reserve);
 	dup = malloc(sizeof(char) * (len + 1));
 	flag = 0;
 	if (dup == NULL)
@@ -105,27 +104,27 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 	int		len_s3;
-	char	*s3;
+	char	*reserve;
 
 	i = 0;
 	j = 0;
 	len_s3 = ft_strlen(s1) + ft_strlen(s2);
-	s3 = malloc((len_s3 + 1) * sizeof(char));
-	if (s3 == NULL)
+	reserve = malloc((len_s3 + 1) * sizeof(char));
+	if (reserve == NULL)
 		return (NULL);
 	while (s1 && s1[i])
 	{
-		s3[i] = s1[i];
+		reserve[i] = s1[i];
 		i++;
 	}
 	while (s2 && s2[j])
 	{
-		s3[i] = s2[j];
+		reserve[i] = s2[j];
 		j++;
 		i++;
 	}
-	s3[i] = '\0';
-	return (s3);
+	reserve[i] = '\0';
+	return (reserve);
 }
 
 static void	nl_found_in_reserve(char **reserve, char **line)
@@ -133,30 +132,39 @@ static void	nl_found_in_reserve(char **reserve, char **line)
 	char	*reserve_temp;
 
 	*line = ft_strdup_before_nl(*reserve);
+	if (*line == NULL)
+	{
+		free(*line);
+		free(*reserve);
+		*line = NULL;
+		*reserve = NULL;
+	}
 	reserve_temp = ft_strdup_after_nl(ft_strchr_no_nl(*reserve, '\n'));
 	free(*reserve);
 	*reserve = reserve_temp;
 }
 
-char *read_line(int bytes_read, char **reserve, char **buffer, int fd)
-{
-	int	bytes_read;
-	
+char *read_line(int bytes_read, char **reserve, char *buffer, int fd)
+{	
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (buffer == NULL)
+		return (NULL);
 	while (1)
 	{
-		bytes_read = read(fd, *buffer, BUFFER_SIZE);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
 		{	
-			free(*buffer);
+			free(buffer);
 			return (NULL);
 		}
 		else if (bytes_read == 0)
 			break;
-		*buffer[bytes_read] = '\0';
-		*reserve = ft_strjoin(*reserve, *buffer);
+		buffer[bytes_read] = '\0';
+		*reserve = ft_strjoin(*reserve, buffer);
 		if (ft_strchr(*reserve, '\n') != 0)
 			break;
 	}
+	free(buffer);
 	return (*reserve);
 }
 
@@ -169,18 +177,44 @@ char *get_next_line(int fd)
 	char			*buffer;
 	
 	line = NULL;
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
-		return (NULL);
-	read_line(bytes_read)
+	buffer = NULL;
+	bytes_read = 0;
+	read_line(bytes_read, &reserve, buffer, fd);
 	nl_found_in_reserve(&reserve, &line);
 	if (ft_strlen(line) == 0)
 		line = NULL;
+	if (!line)
+	{
+		free(line);
+		free(reserve);
+		free(buffer);
+		line = NULL;
+		reserve = NULL;
+		buffer = NULL;
+	}
+	//printf("%s", line);
 	free(buffer);
 	return (line);
 }
 
-int	main(void)
+// int	main(void)
+// {
+// 	int		fd;
+// 	fd = open("text.txt", O_RDONLY);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	//get_next_line(fd);
+// }
+
+int main(void)
 {
 	int		fd;
 	char	*line;
