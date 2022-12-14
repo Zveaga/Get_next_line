@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/12 17:22:24 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/14 18:58:55 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ char	*update_reserve(char *reserve)
 	}
 	dup = malloc(sizeof(char) * (ft_strlen(reserve) - i + 1));
 	if (dup == NULL)
+	{
+		free(reserve);
 		return (NULL);
+	}
 	j = 0;
 	while (reserve[i])
 		dup[j++] = reserve[i++];
@@ -54,7 +57,9 @@ char	*save_line(char *reserve)
 	i = 0;
 	flag = 0;
 	if (dup == NULL)
+	{
 		return (NULL);
+	}
 	while (reserve && reserve[i] && (flag == 0))
 	{
 		dup[i] = reserve[i];
@@ -78,7 +83,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	len = ft_strlen(s1) + ft_strlen(s2);
 	reserve = malloc((len + 1) * sizeof(char));
 	if (reserve == NULL)
+	{
+		free(s1);
 		return (NULL);
+	}
 	while (s1 && s1[i])
 	{
 		reserve[i] = s1[i];
@@ -101,7 +109,7 @@ char	*read_and_reserve(char *reserve, int fd)
 	int		bytes_read;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
+	if (buffer == NULL)
 		return (NULL);
 	while (1)
 	{
@@ -127,12 +135,15 @@ char	*get_next_line(int fd)
 {
 	static char		*reserve;
 	char			*line;
-
+	
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	reserve = read_and_reserve(reserve, fd);
-	if (!reserve)
+	if (reserve == NULL)
+	{
+		free(reserve);
 		return (NULL);
+	}
 	line = save_line(reserve);
 	reserve = update_reserve(reserve);
 	return (line);

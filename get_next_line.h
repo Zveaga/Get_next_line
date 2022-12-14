@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:38:48 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/12 17:24:24 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/14 11:56:57 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 # include<stdlib.h>
 # include<fcntl.h>
 # include<unistd.h>
-# include<stdio.h> // -> REMOVE!!
-# include<string.h> // -> REMOVE!!
+# include<stdio.h>
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE	10
 # endif
