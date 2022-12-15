@@ -6,22 +6,22 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/14 18:58:55 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/15 15:37:53 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 
-char	*update_reserve(char *reserve)
+static char	*update_reserve(char *reserve)
 {
 	char	*dup;
 	int		i;
 	int		j;
 
 	i = 0;
-	while (reserve && reserve[i] != '\n' && reserve[i])
+	while (reserve[i] != '\n' && reserve[i])
 		i++;
-	if (reserve && reserve[i] == '\n')
+	if (reserve[i] == '\n')
 		i++;
 	if (reserve[i] == '\0')
 	{
@@ -42,24 +42,22 @@ char	*update_reserve(char *reserve)
 	return (dup);
 }
 
-char	*save_line(char *reserve)
+static char	*save_line(char *reserve)
 {
 	int		i;
 	char	*dup;
 	int		flag;
 
 	i = 0;
-	while (reserve && reserve[i] != '\n' && reserve[i])
+	while (reserve[i] != '\n' && reserve[i])
 		i++;
-	if (reserve && reserve[i] == '\n')
+	if (reserve[i] == '\n')
 		i++;
 	dup = malloc(sizeof(char) * (i + 1));
 	i = 0;
 	flag = 0;
 	if (dup == NULL)
-	{
 		return (NULL);
-	}
 	while (reserve && reserve[i] && (flag == 0))
 	{
 		dup[i] = reserve[i];
@@ -71,7 +69,7 @@ char	*save_line(char *reserve)
 	return (dup);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+static char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
 	int		j;
@@ -93,24 +91,23 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 	}
 	while (s2 && s2[j])
-	{
-		reserve[i] = s2[j];
-		j++;
-		i++;
-	}
+		reserve[i++] = s2[j++];
 	free(s1);
 	reserve[i] = '\0';
 	return (reserve);
 }
 
-char	*read_and_reserve(char *reserve, int fd)
+static char	*read_and_reserve(char *reserve, int fd)
 {	
 	char	*buffer;
 	int		bytes_read;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (buffer == NULL)
+	{
+		free(reserve);
 		return (NULL);
+	}
 	while (1)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -124,6 +121,12 @@ char	*read_and_reserve(char *reserve, int fd)
 			break ;
 		buffer[bytes_read] = '\0';
 		reserve = ft_strjoin(reserve, buffer);
+		// if (reserve == NULL)
+		// {
+		// 	free(reserve);
+		// 	free(buffer);
+		// 	return(NULL);
+		// }
 		if (ft_strchr(reserve, '\n') != 0)
 			break ;
 	}	
@@ -140,12 +143,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	reserve = read_and_reserve(reserve, fd);
 	if (reserve == NULL)
-	{
-		free(reserve);
 		return (NULL);
-	}
 	line = save_line(reserve);
 	reserve = update_reserve(reserve);
+	if (reserve == NULL)
+		free(reserve);
 	return (line);
 }
 
@@ -162,6 +164,8 @@ char	*get_next_line(int fd)
 // 		free(line);
 // 		line = get_next_line(fd);
 // 	}
+// 	//system("leaks -q a.out");
+// 	return (0);
 // }
 
 // int	main(void)

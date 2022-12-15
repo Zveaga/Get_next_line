@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/12 17:17:16 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/12 17:24:04 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/15 14:58:45 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strchr(const char *str, int c)
 {	
-	if (!str)
+	if (str == NULL)
 		return (0);
 	while (str && *str)
 	{
@@ -31,7 +31,7 @@ int	ft_strlen(const char *s)
 {
 	int	i;
 
-	if (!s)
+	if (s == NULL)
 		return (0);
 	i = 0;
 	while (s && s[i])
