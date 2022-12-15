@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/15 15:37:53 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/15 17:42:18 by raanghel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,15 +121,9 @@ static char	*read_and_reserve(char *reserve, int fd)
 			break ;
 		buffer[bytes_read] = '\0';
 		reserve = ft_strjoin(reserve, buffer);
-		// if (reserve == NULL)
-		// {
-		// 	free(reserve);
-		// 	free(buffer);
-		// 	return(NULL);
-		// }
 		if (ft_strchr(reserve, '\n') != 0)
 			break ;
-	}	
+	}
 	free(buffer);
 	return (reserve);
 }
