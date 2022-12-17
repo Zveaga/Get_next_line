@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:38:48 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/15 14:57:51 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/17 09:54:03 by rares         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ char	*get_next_line(int fd);
 char	*ft_strchr(const char *str, int c);
 
 int		ft_strlen(const char *s);
+
+int		len_line(char *reserve);
 
 #endif

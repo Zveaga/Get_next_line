@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/15 17:42:18 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/17 10:04:49 by rares         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,7 @@ static char	*update_reserve(char *reserve)
 	int		i;
 	int		j;
 
-	i = 0;
-	while (reserve[i] != '\n' && reserve[i])
-		i++;
-	if (reserve[i] == '\n')
-		i++;
+	i = len_line(reserve);
 	if (reserve[i] == '\0')
 	{
 		free(reserve);
@@ -48,11 +44,7 @@ static char	*save_line(char *reserve)
 	char	*dup;
 	int		flag;
 
-	i = 0;
-	while (reserve[i] != '\n' && reserve[i])
-		i++;
-	if (reserve[i] == '\n')
-		i++;
+	i = len_line(reserve);
 	dup = malloc(sizeof(char) * (i + 1));
 	i = 0;
 	flag = 0;
@@ -139,9 +131,17 @@ char	*get_next_line(int fd)
 	if (reserve == NULL)
 		return (NULL);
 	line = save_line(reserve);
+	if (line == NULL)
+	{
+		free(line);
+		line = NULL;
+	}
 	reserve = update_reserve(reserve);
 	if (reserve == NULL)
+	{
 		free(reserve);
+		reserve = NULL;
+	}
 	return (line);
 }
 

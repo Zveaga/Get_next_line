@@ -6,7 +6,7 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/12 17:17:16 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/15 14:58:45 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/17 09:53:49 by rares         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,18 @@ int	ft_strlen(const char *s)
 		return (0);
 	i = 0;
 	while (s && s[i])
+		i++;
+	return (i);
+}
+
+int	len_line(char *reserve)
+{
+	int	i;
+
+	i = 0;
+	while (reserve[i] != '\n' && reserve[i])
+		i++;
+	if (reserve[i] == '\n')
 		i++;
 	return (i);
 }
