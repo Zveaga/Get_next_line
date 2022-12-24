@@ -6,13 +6,11 @@
 /*   By: raanghel <raanghel@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/25 13:59:34 by raanghel      #+#    #+#                 */
-/*   Updated: 2022/12/17 17:34:30 by raanghel      ########   odam.nl         */
+/*   Updated: 2022/12/24 11:22:34 by rares         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#include"get_next_line.h"
 
 static char	*update_reserve(char *reserve)
 {
@@ -24,7 +22,6 @@ static char	*update_reserve(char *reserve)
 	if (reserve[i] == '\0')
 	{
 		free(reserve);
-		reserve = NULL;
 		return (NULL);
 	}
 	dup = malloc(sizeof(char) * (ft_strlen(reserve) - i + 1));
@@ -36,7 +33,11 @@ static char	*update_reserve(char *reserve)
 	}
 	j = 0;
 	while (reserve[i])
-		dup[j++] = reserve[i++];
+	{
+		dup[j] = reserve[i];
+		j++;
+		i++;
+	}
 	dup[j] = '\0';
 	free(reserve);
 	return (dup);
@@ -102,7 +103,6 @@ static char	*read_and_reserve(char *reserve, int fd)
 	if (buffer == NULL)
 	{
 		free(reserve);
-		reserve = NULL;
 		return (NULL);
 	}
 	while (1)
@@ -112,7 +112,6 @@ static char	*read_and_reserve(char *reserve, int fd)
 		{
 			free(buffer);
 			free(reserve);
-			reserve = NULL;
 			return (NULL);
 		}
 		else if (bytes_read == 0)
@@ -147,11 +146,6 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	reserve = update_reserve(reserve);
-	if (reserve == NULL)
-	{
-		free(line);
-		return (NULL);
-	}	
 	return (line);
 }
 
@@ -195,20 +189,20 @@ char	*get_next_line(int fd)
 // 	line = get_next_line(fd);
 // 	printf("%s", line);
 
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
+// 	// line = get_next_line(fd);
+// 	// printf("%s", line);
 
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
+// 	// line = get_next_line(fd);
+// 	// printf("%s", line);
 
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
+// 	// line = get_next_line(fd);
+// 	// printf("%s", line);
 
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
+// 	// line = get_next_line(fd);
+// 	// printf("%s", line);
 
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
+// 	// line = get_next_line(fd);
+// 	// printf("%s", line);
 // }
 
 // static char	*update_reserve(char *reserve)
