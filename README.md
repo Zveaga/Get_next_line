@@ -24,6 +24,6 @@ An executable will be created. If you run it with `./get_next_line`, a test file
 
 You can read any text file by replacing `text.txt` in the [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c) file with the name of the text file you want to read. 
 
-Keep in mind that the entire text file will be displayed in my example. The function gets called from inside of a while loop until `line` becomes NULL in [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c). If you wish to only return a single line, call the function from outside of a while loop.
+Keep in mind that the entire text file will be displayed in my example. In [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c), the function gets called from inside of a while loop until `line` becomes NULL . If you wish to only return a single line, call the function from outside of a while loop.
 
 Happy text file reading!
