@@ -12,7 +12,7 @@ Clone the repository
 ```
 git clone git@github.com:Zveaga/Get_next_line.git
 ```
-Move inside the Libft directory
+Move inside the directory
 ```
 cd Get_next_line
 ```
