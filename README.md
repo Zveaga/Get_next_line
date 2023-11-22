@@ -28,7 +28,7 @@ Run it
 ```
 A sample text file will be displayed to the terminal. You can use any text file of your choosing. This one is just an example so you can see the output of the function.
 
-You can read any text file by replacing `text.txt` in the [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c) file with the name of the text file you want to read. 
+To read any text file, replace `text.txt` in the [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c) file with the name of the text file you want to read. 
 
 Keep in mind that the entire text file will be displayed in my example. In [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c), the function gets called from inside of a while loop until `line` becomes NULL, which means the end of the text file has been reached. If you wish to only return a single line, call the function from outside of a while loop.
 
