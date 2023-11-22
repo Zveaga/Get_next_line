@@ -30,6 +30,6 @@ A sample text file will be displayed to the terminal. You can use any text file 
 
 You can read any text file by replacing `text.txt` in the [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c) file with the name of the text file you want to read. 
 
-Keep in mind that the entire text file will be displayed in my example. In [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c), the function gets called from inside of a while loop until `line` becomes NULL . If you wish to only return a single line, call the function from outside of a while loop.
+Keep in mind that the entire text file will be displayed in my example. In [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c), the function gets called from inside of a while loop until `line` becomes NULL, which means the end of the text file has been reached. If you wish to only return a single line, call the function from outside of a while loop.
 
 Happy text file reading!
