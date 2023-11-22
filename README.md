@@ -20,7 +20,13 @@ Compile
 ```
 make
 ```
-An executable will be created. If you run it with `./get_next_line`, a test file will be displayed to the terminal. You can use any text file of your choosing. I have this one here as an example so you can see the output.
+An executable `get_next_line` will be created
+
+Run it
+```
+./get_next_line
+```
+A sample text file will be displayed to the terminal. You can use any text file of your choosing. This one is just an example so you can see the output of the function.
 
 You can read any text file by replacing `text.txt` in the [main.c](https://github.com/Zveaga/Get_next_line/blob/master/main.c) file with the name of the text file you want to read. 
 
