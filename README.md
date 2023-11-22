@@ -1,6 +1,6 @@
 # Get_next_line
 
-The goal of this project is to write a function that reads a text file pointed to by the file descriptor and returns a single line. Repeatead calls to the `get_next_line` function should read and return the entire text file, one line at a time.
+The goal of this project is to write a function that reads a text file pointed to by the file descriptor and returns a single line. Repeated calls to the `get_next_line` function should read and return the entire text file, one line at a time.
 
 ## Key Concepts
 - Memory management
