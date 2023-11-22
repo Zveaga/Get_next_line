@@ -20,7 +20,8 @@ Compile
 ```
 make
 ```
-Now if you run `./get_next_line`, a test file will be displayed to the terminal. You can use any text file of your choosing, this one is just for the seeing the result of calling the get_next_line function multiple times to return the text file line by line. You could for example use the function in other C projects to read text files. Simply replace 
+Now if you run `./get_next_line`, a test file will be displayed to the terminal. You can use any text file of your choosing, this one is just for the seeing the result of calling the get_next_line function multiple times to return the text file line by line. 
+To use the function, simply replace `text.txt` in the `main.c` file with the name of the file you want to read.
 
 ## The function
 
